@@ -288,6 +288,11 @@ const getMe = async (req, res, next) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        phone: user.phone,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        profilePicture: user.profilePicture,
+        address: user.address,
         userType: user.userType,
         isEmailVerified: user.isEmailVerified,
         lastLogin: user.lastLogin,
@@ -300,6 +305,49 @@ const getMe = async (req, res, next) => {
   }
 };
 
+// @desc    Update profile
+// @route   PUT /api/auth/profile
+// @access  Private
+const updateProfile = async (req, res, next) => {
+  try {
+    const allowedFields = [
+      "username", "phone", "dateOfBirth", "gender",
+      "profilePicture", "address"
+    ];
+
+    const updateData = {};
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      data: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        phone: user.phone,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        profilePicture: user.profilePicture,
+        address: user.address,
+        userType: user.userType,
+        isEmailVerified: user.isEmailVerified,
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   signup,
   login,
@@ -307,5 +355,6 @@ export {
   resetPassword,
   refreshToken,
   logout,
-  getMe
+  getMe,
+  updateProfile
 };

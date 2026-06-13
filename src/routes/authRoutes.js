@@ -11,6 +11,7 @@ import {
   refreshToken,
   logout,
   getMe,
+  updateProfile,
 } from "../controllers/authController.js";
 
 import { protect } from "../middlewares/authMiddleware.js";
@@ -49,6 +50,7 @@ router.post("/refresh-token", refreshToken);
 
 // Protected routes
 router.get("/me", protect, getMe);
+router.put("/profile", protect, updateProfile);
 router.post("/logout", protect, logout);
 
 export default router; 

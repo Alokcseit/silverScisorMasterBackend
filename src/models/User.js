@@ -67,6 +67,41 @@ const userSchema = new mongoose.Schema(
     lastLogin: {
       type: Date,
     },
+
+    // Profile fields
+    phone: {
+      type: String,
+      default: "",
+    },
+
+    dateOfBirth: {
+      type: String,
+      default: "",
+    },
+
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+      default: "male",
+    },
+
+    profilePicture: {
+      type: String,
+      default: "",
+    },
+
+    address: {
+      street: { type: String, default: "" },
+      area: { type: String, default: "" },
+      city: { type: String, default: "" },
+      state: { type: String, default: "" },
+      pincode: { type: String, default: "" },
+      country: { type: String, default: "India" },
+      location: {
+        type: { type: String, enum: ["Point"], default: "Point" },
+        coordinates: { type: [Number], default: [0, 0] },
+      },
+    },
   },
   {
     timestamps: true,
