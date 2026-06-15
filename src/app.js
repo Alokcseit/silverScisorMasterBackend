@@ -13,18 +13,51 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
+
+
 // CORS
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      process.env.CLIENT_URL,
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  })
-);
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:5173",
+//       "http://localhost:3000",
+//       process.env.CLIENT_URL,
+//     ],
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//   })
+// );
+
+
+// salon-service/src/app.js
+
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CLIENT_URL,
+
+    // ✅ Capacitor
+    'capacitor://localhost',
+    'http://localhost',
+    'ionic://localhost',
+    'https://localhost',
+    'null',
+
+    'https://silverscisor.netlify.app'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin'
+  ]
+}));
+
+app.options('*', cors());
 
 // Body parser
 app.use(express.json({ limit: "10mb" }));
