@@ -57,7 +57,6 @@ app.use(cors({
   ]
 }));
 
-app.options(cors());
 
 // Body parser
 app.use(express.json({ limit: "10mb" }));
