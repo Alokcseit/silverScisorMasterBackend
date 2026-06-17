@@ -348,6 +348,40 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
+const getAllUsers = async (req, res, next) => {
+  try {
+    const { userType, page = 1, limit = 20, search } = req.query;
+    const filter = {};
+
+    if (userType) filter.userType = userType;
+    if (search) {
+      filter.$or = [
+        { username: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const total = await User.countDocuments(filter);
+    const users = await User.find(filter)
+      .select('-password -refreshToken -resetPasswordToken -resetPasswordExpire')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    res.json({
+      success: true,
+      count: users.length,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / parseInt(limit)),
+      data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   signup,
   login,
@@ -356,5 +390,6 @@ export {
   refreshToken,
   logout,
   getMe,
-  updateProfile
+  updateProfile,
+  getAllUsers,
 };

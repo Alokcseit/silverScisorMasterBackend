@@ -12,9 +12,10 @@ import {
   logout,
   getMe,
   updateProfile,
+  getAllUsers,
 } from "../controllers/authController.js";
 
-import { protect } from "../middlewares/authMiddleware.js";
+import { protect, authorize } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -52,5 +53,8 @@ router.post("/refresh-token", refreshToken);
 router.get("/me", protect, getMe);
 router.put("/profile", protect, updateProfile);
 router.post("/logout", protect, logout);
+
+// Admin-only
+router.get("/users", protect, authorize('admin'), getAllUsers);
 
 export default router; 
